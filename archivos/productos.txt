@@ -1,0 +1,2 @@
+2535;Paracetamol;farmaco;5;0.2
+112;Collas;Accesorios;14;3.0

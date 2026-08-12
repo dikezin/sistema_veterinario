@@ -1,0 +1,9 @@
+target/
+*.class
+.idea/
+*.iml
+nbproject/private/
+archivos/factura_*.txt
+archivos/Factura_*.txt
+archivos/usuarios.txt
+archivos/consultas.txt
