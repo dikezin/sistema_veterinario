@@ -1,0 +1,4 @@
+0000000000;Admin;Sistema;admin@admin.com;1234;ADMIN
+1234567890;juan;moreira;juanmoreira@gmail.com;juanmoreira123;USUARIO
+0952313542;Andres;Dike;dikegod12@gmail.com;123456;USUARIO
+123456789;andres;dikee;dike@gmail.com;dike123;USUARIO
