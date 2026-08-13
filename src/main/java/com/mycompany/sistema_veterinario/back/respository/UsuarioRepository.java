@@ -31,6 +31,26 @@ public class UsuarioRepository {
         }
         return null;
     }
+    public boolean guardarUsuario (Usuarios usuarios) throws Exception{
+        String sql = """
+                INSERT INTO usuarios
+                (cedula, nombre, apellido, correo, password_hash, rol)
+                values(?,?,?,?,?,?)
+                
+                """;
+        try (Connection conexio = conexion.conectar());
+            PreparedStatement ps = conexion.prepareStatement(sql) {
+
+                ps.setString(1,usuarios.getCedula());
+                ps.setString(2,usuarios.getNombre());
+                ps.setString(3,usuarios.getApellido());
+                ps.setString(4, usuarios.getCorreo());
+                ps.setString(5, usuarios.getPass());
+                ps.setString(6, usuarios.getRol());
+            }
+            int filasGuardadas= ps.executeUpdate();
+        return filasGuardadas>0;
+    }
 }
 
 

@@ -22,17 +22,8 @@ public class Usuarios_Manager {
     public static void guardar(Usuarios u) throws IOException {
 
         // Verificar si la cédula ya existe
-        if (cedulaExiste(u.getCedula())) {
-            throw new IOException("Cédula ya registrada");
-        }
 
-        FileWriter fw = new FileWriter(ARCHIVO, true);
-        fw.write(u.getCedula().trim()+ ";" +u.getNombre().trim()+ ";" +
-                 u.getApellido().trim() + ";" +
-                 u.getCorreo().trim()+ ";" +
-                u.getPass().trim()+ ";" +
-               u.getRol().trim() + "\n");
-        fw.close();
+
     }
 
     public static Usuarios login(String correo, String pass) {
