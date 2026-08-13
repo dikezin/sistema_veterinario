@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.sistema_veterinario.front;
+import java.sql.SQLIntegrityConstraintViolationException;
 import com.mycompany.sistema_veterinario.back.model.Usuarios;
 import com.mycompany.sistema_veterinario.back.service.Usuarios_Manager;
 import java.io.*;
@@ -208,30 +209,52 @@ public class Registro extends javax.swing.JFrame {
         String pass=txtpass.getText();
         String rol="USUARIO";
        if (nombre.trim().isEmpty() || pass.trim().isEmpty() || cedula.trim().isEmpty()||correo.trim().isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Casilla vacía");
+        JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
         return;
     }
-
-    if (!correo.contains("@") || !correo.contains(".") || correo.contains("@@") || correo.contains("..")) {
-        JOptionPane.showMessageDialog(null, "Correo no válido");
-        return;
-    
-    } else {
-        try {
-           
-             Usuarios newUsuario = new Usuarios(cedula,nombre,apellido,correo,pass,rol);
-             Usuarios_Manager.guardar(newUsuario);
-            
-             JOptionPane.showMessageDialog(null, "Usuario registrado correctamente");
-             
-             Login login = new Login();
-             login.setVisible(true);
-             this.dispose();
-        } catch (Exception e) {
+        if (!cedula.matches("\\d{10}")) {
+            JOptionPane.showMessageDialog(this,
+                    "La cédula debe tener 10 dígitos");
+            return;
         }
-     
-}
-    }//GEN-LAST:event_bttregistroActionPerformed
+
+        if (!correo.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+            JOptionPane.showMessageDialog(this,
+                    "Ingrese un correo válido");
+            return;
+        }
+
+    
+
+
+        try {
+
+             Usuarios usuario = new Usuarios(cedula,nombre,apellido,correo,pass,rol);
+             boolean guardado = Usuarios_Manager.guardar(usuario);
+             if (!guardado){
+
+                 JOptionPane.showMessageDialog(this,
+                         "No se pudo registrar el usuario");
+                 return;
+             }
+
+            JOptionPane.showMessageDialog(this,
+                    "Usuario registrado correctamente");
+
+            new Login().setVisible(true);
+            this.dispose();
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            JOptionPane.showMessageDialog(this,
+                    "La cédula o el correo ya están registrados");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al registrar el usuario: " + e.getMessage());
+        }
+    }
+
+    //GEN-LAST:event_bttregistroActionPerformed
 
     private void btTienesCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTienesCuentaActionPerformed
         // TODO add your handling code here:

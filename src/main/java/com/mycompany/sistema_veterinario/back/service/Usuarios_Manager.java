@@ -19,11 +19,12 @@ import java.io.IOException;
 public class Usuarios_Manager {
   private static final String ARCHIVO = "archivos/usuarios.txt";
 
-    public static void guardar(Usuarios u) throws IOException {
+    public static boolean guardar(Usuarios u) throws Exception {
 
         // Verificar si la cédula ya existe
+UsuarioRepository usuarioRepository = new UsuarioRepository();
 
-
+return usuarioRepository.guardarUsuario(u);
     }
 
     public static Usuarios login(String correo, String pass) {
