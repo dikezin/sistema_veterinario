@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.sistema_veterinario.back.service;
+import com.mycompany.sistema_veterinario.back.respository.UsuarioRepository;
 import com.mycompany.sistema_veterinario.back.model.Usuarios;
 
 import java.io.BufferedReader;
@@ -34,33 +35,20 @@ public class Usuarios_Manager {
         fw.close();
     }
 
-    public static Usuarios login(String user, String pass) {
-
-        try (BufferedReader br = new BufferedReader(new FileReader(ARCHIVO))) {
-        String linea;
-
-        while ((linea = br.readLine()) != null) {
-
-            String[] datos = linea.split(";");
-
-            String cedula = datos[0];
-            String nombre = datos[1];
-            String apellido = datos[2];
-            String correo = datos[3];
-            String contraseña = datos[4];
-            String rol = datos[5];
-
-           if (correo.equalsIgnoreCase(user.trim()) && contraseña.equals(pass.trim())) {
-        return new Usuarios(cedula, nombre, apellido, correo, contraseña, rol);
-                
+    public static Usuarios login(String correo, String pass) {
+        try {
+            UsuarioRepository repository = new UsuarioRepository();
+            Usuarios usuario = repository.buscarPorCorreo(correo);
+            if (correo != null
+                    && usuario.getPass().equals(pass)) {
+                return usuario;
             }
+
+        } catch (Exception e) {
+            System.out.println("Error al iniciar sesion");
+            e.printStackTrace();
         }
-
-    } catch (IOException e) {
-        System.out.println("Error leyendo usuarios");
-    }
-
-    return null;
+        return null;
     }
 
   public static void crearAdminSiNoExiste() {

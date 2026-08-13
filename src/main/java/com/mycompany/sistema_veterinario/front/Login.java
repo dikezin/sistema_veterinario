@@ -197,6 +197,10 @@ String passL="";
         JOptionPane.showMessageDialog(this, "Vrifique la informacion ingresada");
         return;}
       Usuarios u = Usuarios_Manager.login(correo, pass);
+    if (u == null){
+        JOptionPane.showMessageDialog(this, "Correo o contraseña incorrectos");
+        return;
+    }
       System.out.println("ROL LOGUEADO: [" + u.getRol() + "]");
 
       if(u.getRol().trim().equals("ADMIN")){
