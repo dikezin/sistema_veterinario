@@ -31,7 +31,7 @@ public class Carrito_View extends javax.swing.JFrame {
 
         for (Productos p : carrito.getProductos()) {
             modelo.addRow(new Object[]{
-                p.getId(),
+                p.getCodigo(),
                 p.getNombre(),
                 p.getPrecio()
             });

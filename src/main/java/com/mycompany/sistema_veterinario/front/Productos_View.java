@@ -31,21 +31,26 @@ private String generarId() {
     return String.valueOf(System.currentTimeMillis());
 }
 
-public void cargarProductosEnTabla() {
+ public void cargarProductosEnTabla() {
 
     DefaultTableModel modelo = (DefaultTableModel) TablaProductos.getModel();
     modelo.setRowCount(0); // limpia la tabla
 
-    ArrayList<Productos> lista = Productos_Manager.listarProductos();
+    try {
+        ArrayList<Productos> lista = Productos_Manager.listarProductos();
 
-    for (Productos p : lista) {
-        modelo.addRow(new Object[]{
-            p.getId(),
-            p.getNombre(),
-            p.getCategoria(),
-            p.getStock(),
-            p.getPrecio()
-        });
+        for (Productos p : lista) {
+            modelo.addRow(new Object[]{
+                p.getCodigo(),
+                p.getNombre(),
+                p.getCategoria(),
+                p.getStock(),
+                p.getPrecio()
+            });
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "No se pudieron cargar los productos: " + e.getMessage());
     }
 }
 
@@ -247,10 +252,16 @@ public void cargarProductosEnTabla() {
                 txtNombre.getText(),
                 txtCategoria.getText(),
                 Integer.parseInt(txtStock.getText()),
-                Double.parseDouble(txtPrecio.getText())
+                Double.parseDouble(txtPrecio.getText()),
+                true
             );
 
-            Productos_Manager.guardarProducto(p);
+            if (!Productos_Manager.guardarProducto(p)) {
+                JOptionPane.showMessageDialog(this,
+                        "No se pudo guardar el producto");
+                return;
+            }
+
             cargarProductosEnTabla();
 
             JOptionPane.showMessageDialog(this, "Producto agregado");
@@ -289,9 +300,18 @@ int fila = TablaProductos.getSelectedRow();
     );
 
     if (confirmar == JOptionPane.YES_OPTION) {
-        Productos_Manager.eliminarProducto(id);
-        cargarProductosEnTabla();
-        JOptionPane.showMessageDialog(this, "Producto eliminado");
+        try {
+            if (Productos_Manager.eliminarProducto(id)) {
+                cargarProductosEnTabla();
+                JOptionPane.showMessageDialog(this, "Producto eliminado");
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "No se encontró el producto");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo eliminar el producto: " + e.getMessage());
+        }
     }        // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 

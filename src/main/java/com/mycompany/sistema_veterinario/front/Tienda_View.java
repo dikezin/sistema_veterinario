@@ -32,21 +32,26 @@ private Tienda_View tienda;
 
 
     }
-public void cargarProductosEnTabla() {
+ public void cargarProductosEnTabla() {
 
-    DefaultTableModel modelo = (DefaultTableModel) TablaTienda.getModel();
-    modelo.setRowCount(0); // limpiar tabla
+    try {
+        DefaultTableModel modelo = (DefaultTableModel) TablaTienda.getModel();
+        modelo.setRowCount(0); // limpiar tabla
 
-    ArrayList<Productos> lista = Productos_Manager.listarProductos();
+        ArrayList<Productos> lista = Productos_Manager.listarProductos();
 
-    for (Productos p : lista) {
-        modelo.addRow(new Object[]{
-            p.getId(),
-            p.getNombre(),
-            p.getCategoria(),
-            p.getPrecio(),
-            p.getStock()
-        });
+        for (Productos p : lista) {
+            modelo.addRow(new Object[]{
+                p.getCodigo(),
+                p.getNombre(),
+                p.getCategoria(),
+                p.getStock(),
+                p.getPrecio()
+            });
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "No se pudieron cargar los productos: " + e.getMessage());
     }
 }
 
@@ -184,7 +189,8 @@ public void cargarProductosEnTabla() {
 
     private void btBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarActionPerformed
         // TODO add your handling code here:
-        String nombreBuscar = JOptionPane.showInputDialog(this, "Ingrese el nombre del producto:");
+        try {
+            String nombreBuscar = JOptionPane.showInputDialog(this, "Ingrese el nombre del producto:");
     
     if (nombreBuscar != null && !nombreBuscar.isEmpty()) {
         DefaultTableModel modelo = (DefaultTableModel) TablaTienda.getModel();
@@ -197,7 +203,7 @@ public void cargarProductosEnTabla() {
             // Buscamos coincidencias por nombre (ignora mayúsculas/minúsculas)
             if (p.getNombre().toLowerCase().contains(nombreBuscar.toLowerCase())) {
                 modelo.addRow(new Object[]{
-                    p.getId(),
+                    p.getCodigo(),
                     p.getNombre(),
                     p.getCategoria(),
                     p.getPrecio(),
@@ -214,7 +220,11 @@ public void cargarProductosEnTabla() {
     } else {
         cargarProductosEnTabla(); // Si cancela o deja vacío, muestra todo
     }
-    }//GEN-LAST:event_btBuscarActionPerformed
+     } catch (Exception e) {
+         JOptionPane.showMessageDialog(this,
+                 "No se pudieron buscar los productos: " + e.getMessage());
+     }
+     }//GEN-LAST:event_btBuscarActionPerformed
 
 
     private void btRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegresarActionPerformed
@@ -277,8 +287,10 @@ private void generarFacturaTXT(String producto, int cant, double precio, double 
         double total = subtotal + iva;
 
         // 1. Procesar la compra en el sistema
-        for(int i = 0; i < cantidad; i++) {
-            Productos_Manager.comprarProducto(id);
+        if (!Productos_Manager.comprarProducto(id, cantidad)) {
+            JOptionPane.showMessageDialog(this,
+                    "No hay stock suficiente o el producto no existe");
+            return;
         }
 
         // 2. GENERAR FACTURA TXT
@@ -336,7 +348,7 @@ int fila = TablaTienda.getSelectedRow();
 
         // 4. Buscar el producto y agregarlo la cantidad de veces necesaria
         for (Productos p : Productos_Manager.listarProductos()) {
-            if (p.getId().equals(id)) {
+            if (p.getCodigo().equals(id)) {
                 // Agregamos el producto al carrito según la cantidad pedida
                 for (int i = 0; i < cantidadAAgregar; i++) {
                     carrito.agregarProducto(p);
@@ -348,6 +360,9 @@ int fila = TablaTienda.getSelectedRow();
 
     } catch (NumberFormatException e) {
         JOptionPane.showMessageDialog(this, "Error: Ingrese un número entero válido");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "No se pudo cargar el producto: " + e.getMessage());
     }       // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 

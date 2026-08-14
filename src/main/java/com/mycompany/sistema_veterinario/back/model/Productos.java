@@ -11,23 +11,26 @@ package com.mycompany.sistema_veterinario.back.model;
  * @author dikeg
  */
 public class Productos {
-  private String id;
+  private String codigo;
     private String nombre;
     private String categoria;
     private int stock;
     private double precio;
+    private boolean activo=false;
 
-    public Productos(String id, String nombre, String categoria, int stock, double precio) {
-        this.id = id;
+
+    public Productos(String codigo, String nombre, String categoria, int stock, double precio, boolean activo) {
+        this.codigo = codigo;
         this.nombre = nombre;
         this.categoria = categoria;
         this.stock = stock;
         this.precio = precio;
+        this.activo=activo;
     }
 
     // GETTERS
-    public String getId() {
-        return id;
+    public String getCodigo() {
+        return codigo;
     }
 
     public String getNombre() {
@@ -45,6 +48,9 @@ public class Productos {
     public double getPrecio() {
         return precio;
     }
+    public boolean getActivo(){return activo;}
+
+
 
     // SETTERS
     public void setStock(int stock) {
