@@ -3,38 +3,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.sistema_veterinario.back.service;
+import com.mycompany.sistema_veterinario.back.respository.ProductosRepository;
 import com.mycompany.sistema_veterinario.back.model.Productos;
 
 /**
  *
  * @author dikeg
  */
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
+
 public class Productos_Manager {
   
     private static final String ARCHIVO = "archivos/productos.txt";
 
     // GUARDAR PRODUCTO
-    public static void guardarProducto(Productos p) {
+    public static boolean guardarProducto(Productos p) throws Exception{
+    ProductosRepository pr = new ProductosRepository();
+    return pr.guardarProductos(p);
 
-        try {
-            FileWriter fw = new FileWriter(ARCHIVO, true);
-            fw.write(
-                p.getId() + ";" +
-                p.getNombre() + ";" +
-                p.getCategoria() + ";" +
-                p.getStock() + ";" +
-                p.getPrecio() + "\n"
-            );
-            fw.close();
-        } catch (Exception e) {
-            System.out.println("Error al guardar producto");
-        }
     }
 
     // LEER TODOS LOS PRODUCTOS
