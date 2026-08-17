@@ -45,8 +45,9 @@ private Tienda_View tienda;
                 p.getCodigo(),
                 p.getNombre(),
                 p.getCategoria(),
+                p.getPrecio(),
                 p.getStock(),
-                p.getPrecio()
+                p.getActivo()
             });
         }
     } catch (Exception e) {

@@ -5,7 +5,10 @@
 package com.mycompany.sistema_veterinario.front;
 import com.mycompany.sistema_veterinario.back.model.Productos;
 import com.mycompany.sistema_veterinario.back.service.Carrito_Manager;
-
+import com.mycompany.sistema_veterinario.back.service.Productos_Manager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -154,15 +157,31 @@ if (carrito.getProductos().isEmpty()) {
 
         double iva = subtotal * 0.15; // IVA del 15%
         double total = subtotal + iva;
+        for (Productos p : carrito.getProductos()){
+    try {
+        boolean actualizado = Productos_Manager.comprarProducto(p.getCodigo(),1);
+        
+        
+        if (!actualizado){
+            JOptionPane.showMessageDialog(null, "No se pudo completar la compra");
+            return;
+        }
+        
+    } catch (SQLException ex) {
+        System.out.println(ex.getMessage());    }
+        }
+    
 
         // 1. Generar la factura en archivo TXT
         generarFacturaCarrito(subtotal, iva, total);
 
         // 2. AQUÍ VA LA LIMPIEZA:
-        carrito.vaciarCarrito(); // <--- ESTO ES LO QUE FALTABA
+         // <--- ESTO ES LO QUE FALTABA
         
+         carrito.vaciarCarrito();
         // 3. Actualizar la tabla para que se vea vacía
         cargarCarrito();
+        tienda.cargarProductosEnTabla();
 
         JOptionPane.showMessageDialog(this, "Venta finalizada. Factura guardada exitosamente.");
        // TODO add your handling code here:

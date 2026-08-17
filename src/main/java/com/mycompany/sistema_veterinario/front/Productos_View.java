@@ -135,17 +135,17 @@ private String generarId() {
 
         TablaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "CODIGO", "NOMBRE", "CATEGORIA", "STOCK", "PRECIO"
+                "CODIGO", "NOMBRE", "CATEGORIA", "STOCK", "PRECIO", "ESTADO"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -159,6 +159,7 @@ private String generarId() {
             TablaProductos.getColumnModel().getColumn(2).setResizable(false);
             TablaProductos.getColumnModel().getColumn(3).setResizable(false);
             TablaProductos.getColumnModel().getColumn(4).setResizable(false);
+            TablaProductos.getColumnModel().getColumn(5).setResizable(false);
         }
 
         btAgregar.setText("Agregar productos");
