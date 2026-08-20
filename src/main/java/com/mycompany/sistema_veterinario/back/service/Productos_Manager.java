@@ -43,6 +43,10 @@ public class Productos_Manager {
         ProductosRepository pr = new ProductosRepository();
         return pr.comprarProducto(codigo, cantidad);
     }
+    public static boolean editarProducto (String codigo, double precio,int stock, boolean activo) throws SQLException{
+       ProductosRepository pr = new ProductosRepository();
+        return pr.editarProducto(codigo,precio,stock,activo );  
+    }
    /* public static void eliminarProducto(String idProducto) {
 
     ArrayLisstatict<Productos> lista = listarProductos();

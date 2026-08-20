@@ -9,6 +9,7 @@ import com.mycompany.sistema_veterinario.back.service.Productos_Manager;
 import com.mycompany.sistema_veterinario.back.model.Productos;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 /**
@@ -45,7 +46,8 @@ private String generarId() {
                 p.getNombre(),
                 p.getCategoria(),
                 p.getStock(),
-                p.getPrecio()
+                p.getPrecio(),
+                p.getActivo()
             });
         }
     } catch (Exception e) {
@@ -69,12 +71,14 @@ private String generarId() {
         jDialog3 = new javax.swing.JDialog();
         jFrame1 = new javax.swing.JFrame();
         jFrame2 = new javax.swing.JFrame();
+        jButton2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaProductos = new javax.swing.JTable();
         btAgregar = new javax.swing.JButton();
         btRegresar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        bt_editar = new javax.swing.JButton();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -131,6 +135,8 @@ private String generarId() {
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
+        jButton2.setText("jButton2");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         TablaProductos.setModel(new javax.swing.table.DefaultTableModel(
@@ -183,16 +189,24 @@ private String generarId() {
             }
         });
 
+        bt_editar.setText("Editar productos");
+        bt_editar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_editarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(11, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btAgregar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btRegresar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btRegresar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bt_editar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -202,6 +216,8 @@ private String generarId() {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bt_editar)
+                .addGap(18, 18, 18)
                 .addComponent(btAgregar)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
@@ -316,6 +332,68 @@ int fila = TablaProductos.getSelectedRow();
     }        // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void bt_editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_editarActionPerformed
+int fila = TablaProductos.getSelectedRow();
+if (fila ==-1){
+JOptionPane.showMessageDialog(null, "Selecciona un producto");
+return;
+}
+String codigo = TablaProductos.getValueAt(fila, 0).toString();
+String nombre = TablaProductos.getValueAt(fila, 1).toString();
+String categoria = TablaProductos.getValueAt(fila,2 ).toString();
+JTextField txtPrecio = new JTextField(
+        TablaProductos.getValueAt(fila, 4).toString());
+
+JTextField txtStock = new JTextField(
+        TablaProductos.getValueAt(fila, 3).toString());
+
+JCheckBox chkActivo = new JCheckBox(
+        "Producto activo",
+        Boolean.parseBoolean(
+                TablaProductos.getValueAt(fila, 5).toString()));
+Object [] formulario = {
+      "Código: " + codigo,
+    "Nombre: " + nombre,
+    "Categoría: " + categoria,
+    "Nuevo stock:", txtStock,
+    "Nuevo precio:", txtPrecio,
+    chkActivo
+};
+
+int confirmar = JOptionPane.showConfirmDialog(this,formulario,"Editar Prodcuto",
+        JOptionPane.OK_CANCEL_OPTION);
+if(confirmar == JOptionPane.OK_OPTION){
+    try{
+       int stock = Integer.parseInt(txtStock.getText());
+       double precio = Double.parseDouble(txtPrecio.getText());
+       boolean activo = chkActivo.isSelected();
+       if(stock < 0 || precio < 0){
+           JOptionPane.showMessageDialog(this, "El stock y el precio no deben ser menores a 0");
+           return;
+       }
+       boolean actualizado =
+       Productos_Manager.editarProducto(codigo, precio, stock, activo);
+       if(actualizado){
+           cargarProductosEnTabla();
+           JOptionPane.showMessageDialog(this,
+                    "Producto actualizado correctamente");
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo actualizar el producto");
+        }
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this,
+                "Stock y precio deben ser valores numéricos");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "Error: " + e.getMessage());
+    }
+}
+       
+
+    }//GEN-LAST:event_bt_editarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -325,7 +403,9 @@ int fila = TablaProductos.getSelectedRow();
     private javax.swing.JTable TablaProductos;
     private javax.swing.JButton btAgregar;
     private javax.swing.JButton btRegresar;
+    private javax.swing.JButton bt_editar;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
     private javax.swing.JDialog jDialog3;

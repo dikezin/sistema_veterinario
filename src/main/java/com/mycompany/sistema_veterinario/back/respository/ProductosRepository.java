@@ -83,5 +83,20 @@ return productos;
             return ps.executeUpdate() > 0;
         }
     }
+    public boolean editarProducto(String codigo, double precio, int stock, boolean activo) throws SQLException{
+        String sql = """
+                    UPDATE productos
+                    set precio = ?, stock = ?, activo = ?
+                     where codigo = ?
+                    """;
+        try (Connection conBD = conexion.conectar();
+                PreparedStatement ps = conBD.prepareStatement(sql)){
+                ps.setDouble(1, precio);
+                ps.setInt(2, stock);
+                ps.setBoolean(3, activo);
+                ps.setString(4, codigo);
+                return ps.executeUpdate ()> 0;
+        }
+    }
 
 }

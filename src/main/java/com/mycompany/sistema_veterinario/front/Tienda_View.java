@@ -84,7 +84,7 @@ private Tienda_View tienda;
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "NOMBRE", "CATEGORIA", "PRECIO", "STOCK"
+                "CODIGO", "NOMBRE", "CATEGORIA", "PRECIO", "STOCK"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -191,9 +191,9 @@ private Tienda_View tienda;
     private void btBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarActionPerformed
         // TODO add your handling code here:
         try {
-            String nombreBuscar = JOptionPane.showInputDialog(this, "Ingrese el nombre del producto:");
+            String codigoBuscar = JOptionPane.showInputDialog(this, "Ingrese el codigo del producto:");
     
-    if (nombreBuscar != null && !nombreBuscar.isEmpty()) {
+    if (codigoBuscar != null && !codigoBuscar.isEmpty()) {
         DefaultTableModel modelo = (DefaultTableModel) TablaTienda.getModel();
         modelo.setRowCount(0); // Limpiamos la tabla
 
@@ -202,7 +202,7 @@ private Tienda_View tienda;
 
         for (Productos p : lista) {
             // Buscamos coincidencias por nombre (ignora mayúsculas/minúsculas)
-            if (p.getNombre().toLowerCase().contains(nombreBuscar.toLowerCase())) {
+            if (p.getCodigo().contains(codigoBuscar)) {
                 modelo.addRow(new Object[]{
                     p.getCodigo(),
                     p.getNombre(),
@@ -215,7 +215,7 @@ private Tienda_View tienda;
         }
 
         if (!encontrado) {
-            JOptionPane.showMessageDialog(this, "No se encontraron productos con ese nombre.");
+            JOptionPane.showMessageDialog(this, "No se encontraron productos con ese codigo.");
             cargarProductosEnTabla(); // Recargamos todo si no hay resultados
         }
     } else {
