@@ -21,7 +21,10 @@ public class Ventas_cab {
     public Ventas_cab (int venta_cab_id, int usuario_id, LocalDate fecha, double sub_total, double total){
         this.venta_cab_id=venta_cab_id;this.fecha=fecha;this.usuario_id=usuario_id;this.sub_total=sub_total;this.total=total;
     }
+    public Ventas_cab ()
+    {
 
+    }
     public int getId() {
         return venta_cab_id;
     }

@@ -12,13 +12,16 @@ public class Ventas_detalle {
      private int ventaId;
     private long producto_id;
     private int cantidad;
-    private double precioUnitario;
+    private double precioUnitario = 0;
 
     public Ventas_detalle(int ventaId, long producto_id, int cantidad, double precioUnitario) {
         this.ventaId = ventaId;
         this.producto_id = producto_id;
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
+    }
+    public Ventas_detalle (){
+
     }
 
     public int getVentaId() {
